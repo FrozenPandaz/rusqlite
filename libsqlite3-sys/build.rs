@@ -258,7 +258,25 @@ mod build_bundled {
         if !win_target() {
             cfg.flag("-DHAVE_LOCALTIME_R");
         }
-        if env::var("TARGET").map_or(false, |v| v == "wasm32-wasi") {
+        if env::var("TARGET").map_or(false, |v| {
+            println!("cargo:warning={}", v);
+            v == "wasm32-wasip1" || v == "wasm32-wasip1-threads"
+        }) {
+
+            // if let Ok(proc) = std::process::Command::new("clang")
+            //     .args(&["-print-libgcc-file-name"])
+            //     .output() {
+
+            //         let a = std::str::from_utf8(proc.stdout.as_ref()).unwrap();
+                    
+            //         println!("cargo:rustc-link-lib=dylib=crypto");
+            
+            //         println!("cargo:rustc-link-search={}", a);
+            //         println!("cargo:rustc-link-lib={}", a);
+            //         println!("cargo:warning=SET THE LINK LIB TO {}", a);
+            //     };
+
+
             cfg.flag("-USQLITE_THREADSAFE")
                 .flag("-DSQLITE_THREADSAFE=0")
                 // https://github.com/rust-lang/rust/issues/74393
